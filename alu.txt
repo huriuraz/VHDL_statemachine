@@ -1,0 +1,39 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+ENTITY alu IS 
+ PORT( a,b: IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+		 cin: IN STD_LOGIC;
+		 sel: IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+		 y: OUT STD_LOGIC_VECTOR(7 DOWNTO 0) );
+END alu;
+ARCHITECTURE alu OF alu IS
+COMPONENT arith_unit IS 
+  PORT( a,b: IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        cin: IN STD_LOGIC;
+		  sel: IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+		  x: OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END COMPONENT;
+COMPONENT logic_unit IS 
+  PORT( a,b: IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+		  sel: IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+		  x: OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END COMPONENT;
+
+COMPONENT mux IS 
+  PORT( a,b: IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+		  sel: IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+		  x: OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END COMPONENT;
+
+SIGNAL x1,x2,y_out: STD_LOGIC_VECTOR(7 DOWNTO 0);
+
+BEGIN 
+ U1: arith_unit PORT MAP(a,b,cin,sel(3 DOWNTO 0),x1);
+ U2: logic_unit PORT MAP(a,b,sel(3 DOWNTO 0),x2);
+ U3: mux PORT MAP(a=>x1,b=>x2, sel=> sel(3 DOWNTO 0),x=>y_out);
+END alu;
+
